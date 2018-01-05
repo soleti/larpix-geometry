@@ -47,6 +47,21 @@ class PixelPlane(object):
             result.chips[chipid] = chip
         return result
 
+    def channels_where(self, condition):
+        '''
+        Return a list of (chip, channel) for the pixels that satisfy the
+        given condition.
+
+        ``condition`` should be a function of one argument, a ``Pixel``
+        object.
+
+        >>> pixelplane.channels_where(lambda pixel: pixel.x > 30 and not pixel.focus_outline)
+
+        '''
+        good_pixels = filter(condition, self.pixels.values())
+        return [pixel.channel_connection for pixel in good_pixels]
+
+
 class GeomChip(object):
     '''
     A LArPix chip to associate with geometric features.
