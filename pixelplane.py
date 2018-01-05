@@ -19,9 +19,9 @@ class PixelPlane(object):
 
         Dict format:
 
-        >>> {'pixels': [(ID, x, y, [(pad_vertex_1_x, y), ...],
+        >>> {'pixels': [(pixelid, x, y, [(pad_vertex_1_x, y), ...],
         ...     [(focus_vertex_1_x, y), ...]), ...],  # list of pixels
-        ...  'chips': [(chipid, [ch1_pixel_ID, ...,]), ...]  # list of chips
+        ...  'chips': [(chipid, [ch1_pixelid, ...,]), ...]  # list of chips
         ... }
 
         If the sensor pad is just a via, pass an empty list for the pad
@@ -30,20 +30,21 @@ class PixelPlane(object):
 
         '''
         result = cls()
-        for i, (ID, x, y, pad_outline, focus_outline) in enumerate(d['pixels']):
+        for i, (pixelid, x, y, pad_outline, focus_outline) in enumerate(d['pixels']):
             pixel = Pixel()
-            pixel.ID = ID
+            pixel.pixelid = pixelid
             pixel.x = x
             pixel.y = y
             pixel.pad_outline = pad_outline
             pixel.focus_outline = focus_outline
-            result._pixel_lookup[ID] = pixel
+            result.pixels[pixelid] = pixel
         for i, (chipid, channel_connections) in enumerate(d['chips']):
             chip = GeomChip()
             chip.chipid = chipid
-            for pixel_ID in channel_connections:
-                chip.channel_connections.append(result._pixel_lookup[pixel_ID])
-            result._chip_lookup[chipid] = chip
+            for channel, pixelid in enumerate(channel_connections):
+                chip.channel_connections.append(result.pixels[pixelid])
+                result.pixels[pixelid].channel_connection = (chip, channel)
+            result.chips[chipid] = chip
         return result
 
 class GeomChip(object):
@@ -61,7 +62,7 @@ class Pixel(object):
 
     '''
     def __init__(self):
-        self.ID = None
+        self.pixelid = None
         self.x = 0
         self.y = 0
         self.pad_outline = []
