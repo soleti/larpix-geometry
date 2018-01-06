@@ -6,7 +6,7 @@ Generate pixel plane patterns.
 from itertools import product
 import numpy as np
 
-def pixels_plain_grid(nx, ny, dx, dy):
+def pixels_plain_grid(nx, ny, dx, dy, startx, starty, start_index):
     '''
     A plain grid of no-pad no-focus pixels.
 
@@ -14,9 +14,9 @@ def pixels_plain_grid(nx, ny, dx, dy):
     pixels = []
     for i, (x_index, y_index) in enumerate(product(range(nx),
             range(ny))):
-        x = x_index * dx
-        y = y_index * dy
-        pixel = (i, x, y, [], [])
+        x = x_index * dx + startx
+        y = y_index * dy + starty
+        pixel = (i + start_index, x, y, [], [])
         pixels.append(pixel)
     return pixels
 
