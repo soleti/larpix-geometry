@@ -20,6 +20,35 @@ def pixels_plain_grid(nx, ny, dx, dy):
         pixels.append(pixel)
     return pixels
 
+def pixels_triangle_grid(repetition_period, nblocksx, nblocksy, startx,
+        starty, start_index):
+    '''
+    A grid of triangle pixels specific to the LArPix sensor board.
+
+    '''
+    pixels = []
+    unit = repetition_period / 8.0
+    subgrid = np.array(  # Laid out here in the orientation on the board
+              [[2*unit, unit],                [6*unit, unit],
+        [unit, 2*unit], [3*unit, 2*unit], [5*unit, 2*unit], [7*unit, 2*unit],
+               [2*unit, 10/3.*unit],          [6*unit, 10/3.*unit],
+               [2*unit, 14/3.*unit],          [6*unit, 14/3.*unit],
+        [unit, 6*unit], [3*unit, 6*unit], [5*unit, 2*unit], [7*unit, 2*unit],
+               [2*unit, 7*unit],              [6*unit, 7*unit]])
+    pixels_per_grid = len(subgrid)
+    for block_index, (xblock, yblock) in enumerate(product(
+            range(nblocksx), range(nblocksy))):
+        pixelids = range(block_index*pixels_per_grid + start_index,
+                (block_index+1)*pixels_per_grid + start_index)
+        offset = np.array([xblock*repetition_period + startx,
+            yblock*repetition_period + starty])
+        pixel_locations = subgrid + offset
+        for pixelid, (x, y) in zip(pixelids, pixel_locations):
+            pixels.append((pixelid, x, y, [], []))
+    return pixels
+
+
+
 grid_4x4_assignments = [1, 2, 0, 3, 5, 6, 4, 7, 8, 11, 9, 10, 12, 15, 13, 14]
 '''
 Index in flattened ``pixelids`` list (from the chip side)::
