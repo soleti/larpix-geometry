@@ -41,7 +41,7 @@ def pixels_triangle_grid(repetition_period, nblocksx, nblocksy, startx,
         [unit, 2*unit], [3*unit, 2*unit], [5*unit, 2*unit], [7*unit, 2*unit],
                [2*unit, 10/3.*unit],          [6*unit, 10/3.*unit],
                [2*unit, 14/3.*unit],          [6*unit, 14/3.*unit],
-        [unit, 6*unit], [3*unit, 6*unit], [5*unit, 2*unit], [7*unit, 2*unit],
+        [unit, 6*unit], [3*unit, 6*unit], [5*unit, 6*unit], [7*unit, 6*unit],
                [2*unit, 7*unit],              [6*unit, 7*unit]])
     pixels_per_grid = len(subgrid)
     for block_index, (xblock, yblock) in enumerate(product(
