@@ -6,18 +6,26 @@ Generate pixel plane patterns.
 from itertools import product
 import numpy as np
 
-def pixels_plain_grid(nx, ny, dx, dy, startx, starty, start_index):
+def pixels_plain_grid(pixel_pitch, nblocksx, nblocksy, startx, starty, start_index):
     '''
-    A plain grid of no-pad no-focus pixels.
+    A plain grid of no-pad no-focus pixels, numbered in batches of 4x4.
 
     '''
     pixels = []
-    for i, (x_index, y_index) in enumerate(product(range(nx),
-            range(ny))):
-        x = x_index * dx + startx
-        y = y_index * dy + starty
-        pixel = [i + start_index, x, y, [], []]
-        pixels.append(pixel)
+    pixels_per_grid = 16
+    repetition_period = 4*pixel_pitch
+    x, y, = np.meshgrid(pixel_pitch*np.arange(4),
+            pixel_pitch*np.arange(4))
+    subgrid = np.array(list(zip(x.reshape(-1), y.reshape(-1))))
+    for block_index, (xblock, yblock) in enumerate(product(
+            range(nblocksx), range(nblocksy))):
+        pixelids = range(block_index*pixels_per_grid + start_index,
+                (block_index+1)*pixels_per_grid + start_index)
+        offset = np.array([xblock*repetition_period + startx,
+            yblock*repetition_period + starty])
+        pixel_locations = subgrid + offset
+        for pixelid, (x, y) in zip(pixelids, pixel_locations):
+            pixels.append([pixelid, float(x), float(y), [], []])
     return pixels
 
 def pixels_triangle_grid(repetition_period, nblocksx, nblocksy, startx,
