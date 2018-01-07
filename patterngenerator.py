@@ -17,8 +17,10 @@ def pixels_plain_grid(pixel_pitch, nblocksx, nblocksy, startx, starty, start_ind
     x, y, = np.meshgrid(pixel_pitch*np.arange(4),
             pixel_pitch*np.arange(4))
     subgrid = np.array(list(zip(x.reshape(-1), y.reshape(-1))))
-    for block_index, (xblock, yblock) in enumerate(product(
-            range(nblocksx), range(nblocksy))):
+    # This line forms the list of blocks going along rows. Without this
+    # nonsense (just using product(range, range) goes down columns).
+    blocklist = np.array(list(product(range(nblocksy), range(nblocksx))))[:, ::-1]
+    for block_index, (xblock, yblock) in enumerate(blocklist):
         pixelids = range(block_index*pixels_per_grid + start_index,
                 (block_index+1)*pixels_per_grid + start_index)
         offset = np.array([xblock*repetition_period + startx,
@@ -44,8 +46,10 @@ def pixels_triangle_grid(repetition_period, nblocksx, nblocksy, startx,
         [unit, 6*unit], [3*unit, 6*unit], [5*unit, 6*unit], [7*unit, 6*unit],
                [2*unit, 7*unit],              [6*unit, 7*unit]])
     pixels_per_grid = len(subgrid)
-    for block_index, (xblock, yblock) in enumerate(product(
-            range(nblocksx), range(nblocksy))):
+    # This line forms the list of blocks going along rows. Without this
+    # nonsense (just using product(range, range) goes down columns).
+    blocklist = np.array(list(product(range(nblocksy), range(nblocksx))))[:, ::-1]
+    for block_index, (xblock, yblock) in enumerate(blocklist):
         pixelids = range(block_index*pixels_per_grid + start_index,
                 (block_index+1)*pixels_per_grid + start_index)
         offset = np.array([xblock*repetition_period + startx,
