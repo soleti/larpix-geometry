@@ -20,10 +20,10 @@ pixels.extend(pg.pixels_plain_grid(3, 4, 1, 77.5, 137.5, len(pixels)))
 pixelids = {
         # Bool value is argument to right_side_up
         # ranges are pixel id ranges for 0-15, 16-31
-        245: (False, 'triangle', range(22*16, 23*16), range(21*16, 22*16)),
-        252: (True, 'triangle', range(23*16, 24*16), range(24*16, 25*16)),
-        246: (False, 'plain', range(30*16, 31*16), range(29*16, 30*16)),
-        243: (True, 'plain', range(31*16, 32*16), range(32*16, 33*16))
+        245: (False, 'triangle', range(21*16, 22*16), range(20*16, 21*16)),
+        252: (True, 'triangle', range(22*16, 23*16), range(23*16, 24*16)),
+        246: (False, 'plain', range(37*16, 38*16), range(36*16, 37*16)),
+        243: (True, 'plain', range(38*16, 39*16), range(39*16, 40*16))
 }
 
 chips = []
