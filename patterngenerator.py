@@ -16,7 +16,7 @@ def pixels_plain_grid(nx, ny, dx, dy, startx, starty, start_index):
             range(ny))):
         x = x_index * dx + startx
         y = y_index * dy + starty
-        pixel = (i + start_index, x, y, [], [])
+        pixel = [i + start_index, x, y, [], []]
         pixels.append(pixel)
     return pixels
 
@@ -44,10 +44,8 @@ def pixels_triangle_grid(repetition_period, nblocksx, nblocksy, startx,
             yblock*repetition_period + starty])
         pixel_locations = subgrid + offset
         for pixelid, (x, y) in zip(pixelids, pixel_locations):
-            pixels.append((pixelid, x, y, [], []))
+            pixels.append([pixelid, float(x), float(y), [], []])
     return pixels
-
-
 
 grid_4x4_assignments = [1, 2, 0, 3, 5, 6, 4, 7, 8, 11, 9, 10, 12, 15, 13, 14]
 '''
