@@ -117,6 +117,6 @@ def assign_pixels(pixelids, assignments, right_side_up=True):
     if not right_side_up:
         assignments = assignments[::-1]
     channel_connections = []
-    for i, pixelid in enumerate(pixelids):
+    for channel_id, pixelid in enumerate(pixelids):
         channel_connections.append(pixelids[assignments[channel_id]])
     return channel_connections
