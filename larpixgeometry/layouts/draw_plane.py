@@ -5,7 +5,7 @@ Generate a PDF of a pixel plane YAML file.
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import inch
 import yaml
-from pixelplane import PixelPlane
+from larpixgeometry.pixelplane import PixelPlane
 import  numpy as np
 
 with open('sensor_plane_28_simple.yaml', 'r') as f:
