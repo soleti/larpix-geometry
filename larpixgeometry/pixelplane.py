@@ -11,6 +11,8 @@ class PixelPlane(object):
     def __init__(self):
         self.pixels = {}
         self.chips = {}
+        self.unconnected_pixel = Pixel()
+        self.unconnected_pixel.channel_connection = []
 
     @classmethod
     def fromDict(cls, d):
@@ -42,8 +44,13 @@ class PixelPlane(object):
             chip = GeomChip()
             chip.chipid = chipid
             for channel, pixelid in enumerate(channel_connections):
-                chip.channel_connections.append(result.pixels[pixelid])
-                result.pixels[pixelid].channel_connection = (chip, channel)
+                if pixelid == None:
+                    chip.channel_connections.append(result.unconnected_pixel)
+                    result.unconnected_pixel.channel_connection.append((chip,
+                        channel))
+                else:
+                    chip.channel_connections.append(result.pixels[pixelid])
+                    result.pixels[pixelid].channel_connection = (chip, channel)
             result.chips[chipid] = chip
         return result
 
@@ -65,6 +72,9 @@ class PixelPlane(object):
 class GeomChip(object):
     '''
     A LArPix chip to associate with geometric features.
+
+    Note: Channels which are not connected to any pixel have, by
+    convention, are assigned to a pixel index of None.
 
     '''
     def __init__(self):

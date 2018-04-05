@@ -31,8 +31,9 @@ for chip, color in zip(pixelplane.chips.values(), colors):
     c.setFillColorRGB(*color)
     colorkey.append(['Chip %d' % chip.chipid, color])
     for channel, pixel in enumerate(chip.channel_connections):
-        c.drawString(pixel.x*7-300 - 5, 15*inch-pixel.y*7-5, str(channel))
-c.setFont('Helvetica', 16)
+        if pixel != pixelplane.unconnected_pixel:
+            c.drawCentredString(pixel.x*7-300, 15*inch-pixel.y*7-7,
+                    str(channel))
 for i, (string, color) in enumerate(colorkey):
     c.setFillColorRGB(*color)
     c.drawString(80, 11*inch-25*i, string)
