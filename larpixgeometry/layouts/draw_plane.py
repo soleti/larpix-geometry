@@ -8,7 +8,7 @@ import yaml
 from larpixgeometry.pixelplane import PixelPlane
 import  numpy as np
 
-with open('sensor_plane_28_8chip.yaml', 'r') as f:
+with open('sensor_plane_28_full.yaml', 'r') as f:
     pixelplane = PixelPlane.fromDict(yaml.load(f))
 
 colors = np.array([[228, 26, 28], [55, 126, 184], [77, 175, 74], [152,
@@ -17,7 +17,7 @@ colors = np.tile(colors, (10,1))
 
 
 
-c = canvas.Canvas('sensor_8chip.pdf', pagesize=(12*inch, 12*inch))
+c = canvas.Canvas('sensor_28chip.pdf', pagesize=(12*inch, 12*inch))
 c.setFont('Helvetica', 20)
 c.drawString(4*inch, 11*inch, 'Sensor board with 28 chips')
 c.drawString(4*inch, 10.6*inch, '(view from chip side)')
