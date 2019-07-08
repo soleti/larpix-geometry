@@ -56,9 +56,9 @@ pixelids = {
 chips = []
 for chipid, (right_side_up, shape, first_ids, second_ids) in pixelids.items():
     if shape == 'plain':
-        assignment = pg.grid_4x4_assignments
+        assignment = pg.grid_4x4_assignments_v1
     else:
-        assignment = pg.triangle_assignments
+        assignment = pg.triangle_assignments_v1
     first_channels = pg.assign_pixels(first_ids, assignment, right_side_up)
     second_channels = pg.assign_pixels(second_ids, assignment, right_side_up)
     chips.append([chipid, first_channels + second_channels])

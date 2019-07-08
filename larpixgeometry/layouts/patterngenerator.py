@@ -59,7 +59,7 @@ def pixels_triangle_grid(repetition_period, nblocksx, nblocksy, startx,
             pixels.append([pixelid, float(x), float(y), [], []])
     return pixels
 
-grid_4x4_assignments = [14, 13, 15, 12, 10, 9, 11, 8, 7, 4, 6, 5, 3, 0, 2, 1]
+grid_4x4_assignments_v1 = [14, 13, 15, 12, 10, 9, 11, 8, 7, 4, 6, 5, 3, 0, 2, 1]
 '''
 Index in flattened ``pixelids`` list (from the chip side)::
 
@@ -76,8 +76,26 @@ Channel assignments (right side up) (from the chip side)::
 3  1  0  2      19 17 16 18
 
 '''
+grid_4x4_assignments_0_15_v1_5 = [14, 13, 12, 15, 10, 9, 11, 8, 7, 4, 5, 6, 0, 3, 1, 2]
+grid_4x4_assignments_16_31_v1_5 = [13, 14, 15, 12, 9, 10, 8, 11, 4, 7, 6, 5, 3, 0, 2, 1]
+'''
+Index in flattened ``pixelids`` list (from the chip side)::
 
-triangle_assignments = [15, 14, 12, 11, 13, 10, 9, 8, 7, 6, 5, 2, 4, 3, 1, 0]
+0  1  2  3
+4  5  6  7
+8  9  10 11
+12 13 14 15
+
+Channel assignments (right side up) (from the chip side)::
+
+12 14 15 13     29 31 30 28
+9  10 11 8  or  24 27 26 25
+7  5  4  6      22 20 21 23
+2  1  0  3      19 16 17 18
+
+'''
+
+triangle_assignments_v1 = [15, 14, 12, 11, 13, 10, 9, 8, 7, 6, 5, 2, 4, 3, 1, 0]
 '''
 Index in flattened ``pixelids`` list (from the chip side)::
 
