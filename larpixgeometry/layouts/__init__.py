@@ -12,9 +12,9 @@ def load(filename):
     '''
     if os.path.isfile(filename):
         with open(filename, 'r') as f:
-            return yaml.load(f)
+            return yaml.load(f, Loader=yaml.SafeLoader)
     elif os.path.isfile(os.path.join(os.path.dirname(__file__), filename)):
         with open(os.path.join(os.path.dirname(__file__), filename), 'r') as f:
-            return yaml.load(f)
+            return yaml.load(f, Loader=yaml.SafeLoader)
     else:
         raise IOError('File not found: %s' % filename)
