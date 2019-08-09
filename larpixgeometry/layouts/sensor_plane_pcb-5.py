@@ -9,9 +9,9 @@ import patterngenerator as pg
 pixels = []
 subgrid_width = 16
 pixels.extend(pg.pixels_plain_grid(4, 2, 1, 53.5, 65.5, len(pixels)))
-pixels.extend(pg.pixels_plain_grid(4, 2, 1, 101.5, 65.5, len(pixels)))
-pixels.extend(pg.pixels_plain_grid(4, 2, 1, 53.5, 101.5, len(pixels)))
-pixels.extend(pg.pixels_plain_grid(4, 2, 1, 101.5, 101.5, len(pixels)))
+pixels.extend(pg.pixels_plain_grid(4, 2, 1, 97.5, 65.5, len(pixels)))
+pixels.extend(pg.pixels_plain_grid(4, 2, 1, 53.5, 109.5, len(pixels)))
+pixels.extend(pg.pixels_plain_grid(4, 2, 1, 97.5, 109.5, len(pixels)))
 
 pixelids = {
         # Bool value is argument to right_side_up
