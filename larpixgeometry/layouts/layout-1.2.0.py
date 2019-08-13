@@ -31,5 +31,5 @@ for chipid, (right_side_up, shape, first_ids, second_ids) in pixelids.items():
     chips.append([chipid, first_channels + second_channels])
 
 
-with open('sensor_plane_pcb-1.5.yaml', 'w') as f:
+with open('layout-1.2.0.yaml', 'w') as f:
     yaml.dump({'pixels': pixels, 'chips': chips}, f)

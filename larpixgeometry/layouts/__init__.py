@@ -1,3 +1,17 @@
+'''
+Layouts specify the mapping from pixel locations to (chipID+channel).
+
+Layouts are numbered as X.Y.Z, where:
+
+- X refers to the LArPix ASIC version number supported by the physical
+  PCB
+- Y refers to the iteration of PCB layout (e.g. a prototype might be
+  Y=0, then a small tile would be Y=1, and then a full tile would be
+  Y=2)
+- Z refers to the specific ASIC loading and configuration on a
+  particular PCB (e.g. if it is only partially loaded).
+
+'''
 import yaml
 import os
 
