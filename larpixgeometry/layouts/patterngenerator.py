@@ -61,25 +61,32 @@ def pixels_triangle_grid(repetition_period, nblocksx, nblocksy, startx,
 
 grid_4x4_assignments_v1 = [14, 13, 15, 12, 10, 9, 11, 8, 7, 4, 6, 5, 3, 0, 2, 1]
 '''
-Index in flattened ``pixelids`` list (from the chip side)::
+Assignments list maps channel to geometrical position in 4x4 grid (v1.0 and
+v1.1).
 
-0  1  2  3
-4  5  6  7
-8  9  10 11
-12 13 14 15
+I.e. assignments[2] gives the location of channel 2, where the locations
+are numbered according to the following grid::
+
+    0  1  2  3
+    4  5  6  7
+    8  9  10 11
+    12 13 14 15
 
 Channel assignments (right side up) (from the chip side)::
 
-13 15 14 12     29 31 30 28
-9  11 10 8  or  25 27 26 24
-7  5  4  6      23 21 20 22
-3  1  0  2      19 17 16 18
+    13 15 14 12     29 31 30 28
+    9  11 10 8  or  25 27 26 24
+    7  5  4  6      23 21 20 22
+    3  1  0  2      19 17 16 18
 
 '''
-grid_4x4_assignments_0_15_v1_5 = [14, 13, 12, 15, 10, 9, 11, 8, 7, 4, 5, 6, 0, 3, 1, 2]
-grid_4x4_assignments_16_31_v1_5 = [13, 14, 15, 12, 9, 10, 8, 11, 4, 7, 6, 5, 3, 0, 2, 1]
+grid_4x4_assignments_0_15_v1_2 = [14, 13, 12, 15, 10, 9, 11, 8, 7, 4, 5, 6, 0, 3, 1, 2]
+grid_4x4_assignments_16_31_v1_2 = [13, 14, 15, 12, 9, 10, 8, 11, 4, 7, 6, 5, 3, 0, 2, 1]
 '''
-Index in flattened ``pixelids`` list (from the chip side)::
+Assignments list maps channel to geometrical position in 4x4 grid (v1.2).
+
+I.e. assignments[2] gives the location of channel 2, where the locations
+are numbered according to the following grid::
 
 0  1  2  3
 4  5  6  7
@@ -97,7 +104,11 @@ Channel assignments (right side up) (from the chip side)::
 
 triangle_assignments_v1 = [15, 14, 12, 11, 13, 10, 9, 8, 7, 6, 5, 2, 4, 3, 1, 0]
 '''
-Index in flattened ``pixelids`` list (from the chip side)::
+Assignments list maps channel to geometrical position in triangle grid
+(v1.0 and v1.1).
+
+I.e. assignments[2] gives the location of channel 2, where the locations
+are numbered according to the following grid::
 
    0           1
 2     3     4     5

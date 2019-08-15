@@ -24,8 +24,8 @@ pixelids = {
 
 chips = []
 for chipid, (right_side_up, shape, first_ids, second_ids) in pixelids.items():
-    assignment_1 = pg.grid_4x4_assignments_0_15_v1_5
-    assignment_2 = pg.grid_4x4_assignments_16_31_v1_5
+    assignment_1 = pg.grid_4x4_assignments_0_15_v1_2
+    assignment_2 = pg.grid_4x4_assignments_16_31_v1_2
     first_channels = pg.assign_pixels(first_ids, assignment_1, right_side_up)
     second_channels = pg.assign_pixels(second_ids, assignment_2, right_side_up)
     chips.append([chipid, first_channels + second_channels])
