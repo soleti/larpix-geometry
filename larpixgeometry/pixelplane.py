@@ -11,6 +11,7 @@ class PixelPlane(object):
     def __init__(self):
         self.pixels = {}
         self.chips = {}
+        self.dimensions = {'x': 0, 'y': 0, 'width': 0, 'height': 0}
         self.unconnected_pixel = Pixel()
         self.unconnected_pixel.channel_connection = []
 
@@ -52,6 +53,10 @@ class PixelPlane(object):
                     chip.channel_connections.append(result.pixels[pixelid])
                     result.pixels[pixelid].channel_connection = (chip, channel)
             result.chips[chipid] = chip
+        result.dimensions['x'] = d['x']
+        result.dimensions['y'] = d['y']
+        result.dimensions['width'] = d['width']
+        result.dimensions['height'] = d['height']
         return result
 
     def channels_where(self, condition):
