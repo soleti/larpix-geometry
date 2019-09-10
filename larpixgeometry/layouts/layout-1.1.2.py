@@ -17,6 +17,10 @@ pixels.extend(pg.pixels_triangle_grid(subgrid_width, 8, 2, 52, 76,
 pixels.extend(pg.pixels_plain_grid(3, 8, 2, 53.5, 101.5, len(pixels)))
 pixels.extend(pg.pixels_plain_grid(3, 6, 1, 65.5, 125.5, len(pixels)))
 pixels.extend(pg.pixels_plain_grid(3, 4, 1, 77.5, 137.5, len(pixels)))
+x = 52
+y = 52
+width = 96
+height = 96
 
 pixelids = {
         # Bool value is argument to right_side_up
@@ -65,4 +69,5 @@ for chipid, (right_side_up, shape, first_ids, second_ids) in pixelids.items():
 
 
 with open('layout-1.1.2.yaml', 'w') as f:
-    yaml.dump({'pixels': pixels, 'chips': chips}, f)
+    yaml.dump({'pixels': pixels, 'chips': chips, 'x': x, 'y': y,
+        'width': width, 'height': height}, f)
