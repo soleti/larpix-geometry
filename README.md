@@ -80,7 +80,8 @@ follows:
 - ``chips``: A nested list containing one element per ASIC. Each element is
   structured as a 2-element list, with the 0th element being the Chip
 ID, and the 1st element being a list where the ``i``-th element is the Pixel
-ID connected to Channel ``i``. For example:
+ID connected to Channel ``i``. (A value of ``null`` means the
+channel is not connected/bonded to any pixel.) For example:
 
 ```
 chips:
@@ -91,6 +92,7 @@ chips:
 - - 20  # <-- Chip ID = 2
   - - 821 # <-- Chip 2, Channel 0 connected to Pixel 821
     - 822 # <-- Chip 2, Channel 1 connected to Pixel 822
+    - null # <-- Chip 2, Channel 2 not bonded to a pixel
 ...
 ```
 
