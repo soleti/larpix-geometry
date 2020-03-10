@@ -128,6 +128,25 @@ Channel assignments (right-side up) (from the chip side)::
 
 '''
 
+grid_4x4_assignments_0_16_v2_2 = [3, 7, 2, 1, 0, 4, 6, 5, 10, 9, 11, 8, 14, 13, 15, 12]
+grid_4x4_assignments_16_31_v2_2 = [3, 1, 2, 0, 7, 4, 6, 5, 10, 9, 8, 12, 13, 14, 11, 15]
+grid_4x4_assignments_31_46_v2_2 = [12, 8, 13, 14, 15, 11, 10, 9, 5, 6, 4, 7, 0, 2, 1, 3]
+grid_4x4_assignments_46_64_v2_2 = [12, 15, 13, 14, 8, 11, 9, 10, 5, 6, 7, 3, 2, 1, 4, 0]
+'''
+Assignments list maps channel to geometrical position in 4x4 grid (v2.2).
+
+I.e. assignments[2] gives the location of channel 2, where the locations
+are numbered according to the following grid::
+
+0  1  2  3
+4  5  6  7
+8  9  10 11
+12 13 14 15
+
+Channel assignments (right side up) (from the chip side)::
+
+'''
+
 def assign_pixels(pixelids, assignments, right_side_up=True):
     '''
     Return a list assigning the given pixelids to a chip's channels
