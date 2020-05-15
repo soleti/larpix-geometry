@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 setup(
         name='larpix-geometry',
-        version='0.3.0',
+        version='0.4.0',
         description='LArPix sensor plane geometry',
         url='https://github.com/samkohn/larpix-geometry',
         author='Sam Kohn',
