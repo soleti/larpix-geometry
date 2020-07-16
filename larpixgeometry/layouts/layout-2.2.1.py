@@ -9,7 +9,7 @@ import patterngenerator as pg
 pixels = []
 subgrid_width = 16
 chip_ids = (14,13,12,24,23,22,34,33,32)
-pixel_pitch = 4.2
+pixel_pitch = 4.434
 width = 7*pixel_pitch*3
 height = 7*pixel_pitch*3
 for chip in chip_ids:
