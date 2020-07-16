@@ -6,16 +6,15 @@ Generate pixel plane patterns.
 from itertools import product
 import numpy as np
 
-def pixels_plain_grid(pixel_pitch, nblocksx, nblocksy, startx, starty, start_index):
+def pixels_plain_grid(pixel_pitch, nblocksx, nblocksy, startx, starty, start_index, batch_size=4, pixels_per_grid=16):
     '''
-    A plain grid of no-pad no-focus pixels, numbered in batches of 4x4.
+    A plain grid of no-pad no-focus pixels, numbered in batches of batch_size x batch_size.
 
     '''
     pixels = []
-    pixels_per_grid = 16
-    repetition_period = 4*pixel_pitch
-    x, y, = np.meshgrid(pixel_pitch*np.arange(4),
-            pixel_pitch*np.arange(4))
+    repetition_period = batch_size * pixel_pitch
+    x, y, = np.meshgrid(pixel_pitch*np.arange(batch_size),
+            pixel_pitch*np.arange(batch_size))
     subgrid = np.array(list(zip(x.reshape(-1), y.reshape(-1))))
     # This line forms the list of blocks going along rows. Without this
     # nonsense (just using product(range, range) goes down columns).
@@ -143,11 +142,36 @@ are numbered according to the following grid::
 8  9  10 11
 12 13 14 15
 
-Channel assignments (right side up) (from the chip side)::
+'''
+
+grid_7x7_assignments_0_64_v2_2_1 = [
+    10,     2,      1,  0,  9,  8,  None,   None,
+    None,   None,   7,  16, 15, 14, 24,     23,
+    22,     21,     30, 35, 28, 29, None,   None,
+    None,   None,   36, 37, 42, 43, 44,     45,
+    38,     46,     47, 48, 39, 40, None,   None,
+    None,   41,     31, 32, 33, 34, 25,     26,
+    27,     17,     18, 19, 13, 20, None,   None,
+    None,   None,   12, 11, 6,  5,  4,      3,
+    ]
+'''
+Assignments list maps channel to geometrical position in 7x7 grid.
+
+I.e. assigments[2] gives the location of channel 2, where the locations
+are numbered according to the following grid::
+
+0   1   2   3   4   5   6
+7   8   9   10  11  12  13
+14  15  16  17  18  19  20
+21  22  23  24  25  26  27
+28  29  30  31  32  33  34
+35  36  37  38  39  40  41
+42  43  44  45  46  47  48
 
 '''
 
-def assign_pixels(pixelids, assignments, right_side_up=True):
+
+def assign_pixels(pixelids, assignments, right_side_up=True, channel_ids=None):
     '''
     Return a list assigning the given pixelids to a chip's channels
     using the provided assignment array.
@@ -169,6 +193,11 @@ def assign_pixels(pixelids, assignments, right_side_up=True):
     if not right_side_up:
         assignments = assignments[::-1]
     channel_connections = []
-    for channel_id, pixelid in enumerate(pixelids):
-        channel_connections.append(pixelids[assignments[channel_id]])
+    if channel_ids is None:
+        channel_ids = pixelids
+    for channel_id, pixelid in enumerate(channel_ids):
+        if assignments[channel_id] is None:
+            channel_connections.append(None)
+        else:
+            channel_connections.append(pixelids[assignments[channel_id]])
     return channel_connections
