@@ -14,8 +14,8 @@ width = 7*pixel_pitch*3
 height = 7*pixel_pitch*3
 for chip in chip_ids:
     x = (chip // 10 - 1) * 7 * pixel_pitch + pixel_pitch/2 - width/2
-    y = (4 - chip % 10) * 7 * pixel_pitch + pixel_pitch/2 - height/2
-    pixels.extend(pg.pixels_plain_grid(4.2, 1, 1, x, y, len(pixels), batch_size=7, pixels_per_grid=49))
+    y = (chip % 10 - 2) * 7 * pixel_pitch + pixel_pitch/2 - height/2
+    pixels.extend(pg.pixels_plain_grid(pixel_pitch, 1, 1, x, y, len(pixels), batch_size=7, pixels_per_grid=49))
 
 pixelids = dict()
 for chip_idx, chip in enumerate(chip_ids):

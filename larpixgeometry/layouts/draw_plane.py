@@ -65,7 +65,7 @@ def transform_x(xcoord):
     return result
 
 def transform_y(ycoord):
-    return canvas_height - (ycoord * scalefactor + translation_y)
+    return (ycoord * scalefactor + translation_y)
 
 c.setFont('Helvetica', 20)
 c.drawString(3*inch, 10*inch, 'Layout %s (%d chips)' % (version,
