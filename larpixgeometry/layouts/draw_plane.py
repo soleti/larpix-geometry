@@ -31,7 +31,8 @@ height_orig = dimensions['height']
 
 colors = np.array([[228, 26, 28], [55, 126, 184], [77, 175, 74], [152,
     78, 163], [255, 127, 0]])/256.0
-colors = np.tile(colors, (10,1))
+colors = np.tile(colors, (100,1))
+print('colors',len(colors))
 
 
 canvas_width, canvas_height = letter
@@ -67,18 +68,21 @@ def transform_x(xcoord):
 def transform_y(ycoord):
     return (ycoord * scalefactor + translation_y)
 
-c.setFont('Helvetica', 20)
+minor_font = 3
+major_font = 20
+
+c.setFont('Helvetica', major_font)
 c.drawString(3*inch, 10*inch, 'Layout %s (%d chips)' % (version,
     len(pixelplane.chips)))
 c.drawString(3*inch, 9.6*inch, '(view from %s side)' % sidename)
-c.setFont('Courier', 7)
+c.setFont('Courier', minor_font)
 colorkey = []
 for pixel in pixelplane.pixels.values():
     c.circle(transform_x(pixel.x), transform_y(pixel.y), 0.4)
     c.drawCentredString(transform_x(pixel.x), transform_y(pixel.y),
             str(pixel.pixelid))
 for chip, color in zip(pixelplane.chips.values(), colors):
-    c.setFont('Courier-Bold', 9)
+    c.setFont('Courier-Bold', minor_font)
     c.setFillColorRGB(*color, alpha=1)
     colorkey.append(['Chip %d' % chip.chipid, color])
     x_sum = 0
@@ -87,17 +91,17 @@ for chip, color in zip(pixelplane.chips.values(), colors):
     for channel, pixel in enumerate(chip.channel_connections):
         if pixel != pixelplane.unconnected_pixel:
             c.drawCentredString(transform_x(pixel.x),
-                    transform_y(pixel.y)-6,
+                    transform_y(pixel.y)-minor_font,
                     str(channel))
             x_sum += transform_x(pixel.x)
             y_sum += transform_y(pixel.y) - 5
             count += 1
     x_avg = x_sum/float(count)
     y_avg = y_sum/float(count)
-    font = ('Helvetica', 56)
+    font = ('Helvetica', major_font)
     c.setFont(*font)
     c.setFillColorRGB(*color, alpha=0.45)
     width = c.stringWidth(str(chip.chipid), *font)
-    c.drawCentredString(x_avg, y_avg-16, str(chip.chipid))
+    c.drawCentredString(x_avg, y_avg-major_font/2, str(chip.chipid))
 c.showPage()
 c.save()
