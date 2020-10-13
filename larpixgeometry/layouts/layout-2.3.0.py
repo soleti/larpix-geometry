@@ -37,7 +37,7 @@ for chip in chip_ids:
     elif chip < 200:
         x,y = last_column_xy(chip)
     else:
-        x,y = (9,0)
+        x,y = (9,9)
     x = x * 7 * pixel_pitch + pixel_pitch/2 - width/2
     y = y * 7 * pixel_pitch + pixel_pitch/2 - height/2
     pixels.extend(pg.pixels_plain_grid(pixel_pitch, 1, 1, x, y, len(pixels), batch_size=7, pixels_per_grid=49))
