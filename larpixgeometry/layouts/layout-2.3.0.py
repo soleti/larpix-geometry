@@ -19,15 +19,16 @@ chip_ids = list(range(11,20)) \
     + list(range(91,100)) \
     + list(range(101,110)) \
     + list(range(110,201,10))
+
 print(chip_ids)
 print('chips',len(chip_ids))
 pixel_pitch = 4.434
 width = 7*pixel_pitch*10
 height = 7*pixel_pitch*10
 
-two_digit_xy = lambda x: ((x%10-1), (x//10-1))
-last_column_xy = lambda x: (9, ((x-100)//10-1))
-last_row_xy = lambda x: (((x-100)%10-1), 9)
+two_digit_xy = lambda x: ((9-(x%10-1)), (x//10-1))
+last_column_xy = lambda x: (0, ((x-100)//10-1))
+last_row_xy = lambda x: (9-((x-100)%10-1), 9)
 
 for chip in chip_ids:
     if chip < 100:
@@ -37,7 +38,7 @@ for chip in chip_ids:
     elif chip < 200:
         x,y = last_column_xy(chip)
     else:
-        x,y = (9,9)
+        x,y = (0,9)
     x = x * 7 * pixel_pitch + pixel_pitch/2 - width/2
     y = y * 7 * pixel_pitch + pixel_pitch/2 - height/2
     pixels.extend(pg.pixels_plain_grid(pixel_pitch, 1, 1, x, y, len(pixels), batch_size=7, pixels_per_grid=49))
