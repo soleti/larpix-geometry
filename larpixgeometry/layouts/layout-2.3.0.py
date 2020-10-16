@@ -23,8 +23,8 @@ chip_ids = list(range(11,20)) \
 print(chip_ids)
 print('chips',len(chip_ids))
 pixel_pitch = 4.434
-width = 7*pixel_pitch*10
-height = 7*pixel_pitch*10
+width = pixel_pitch*69 + pixel_pitch
+height = pixel_pitch*69 + pixel_pitch
 
 two_digit_xy = lambda x: ((9-(x%10-1)), (x//10-1))
 last_column_xy = lambda x: (0, ((x-100)//10-1))
