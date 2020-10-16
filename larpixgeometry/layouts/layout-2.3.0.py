@@ -23,8 +23,8 @@ chip_ids = list(range(11,20)) \
 print(chip_ids)
 print('chips',len(chip_ids))
 pixel_pitch = 4.434
-width = pixel_pitch*69
-height = pixel_pitch*69
+width = pixel_pitch*69 + pixel_pitch
+height = pixel_pitch*69 + pixel_pitch
 
 two_digit_xy = lambda x: ((9-(x%10-1)), (x//10-1))
 last_column_xy = lambda x: (0, ((x-100)//10-1))
@@ -39,15 +39,15 @@ for chip in chip_ids:
         x,y = last_column_xy(chip)
     else:
         x,y = (0,9)
-    x = x * 7 * pixel_pitch + pixel_pitch - width/2
-    y = y * 7 * pixel_pitch + pixel_pitch - height/2
+    x = x * 7 * pixel_pitch + pixel_pitch/2 - width/2
+    y = y * 7 * pixel_pitch + pixel_pitch/2 - height/2
     pixels.extend(pg.pixels_plain_grid(pixel_pitch, 1, 1, x, y, len(pixels), batch_size=7, pixels_per_grid=49))
 
 pixelids = dict()
 for chip_idx, chip in enumerate(chip_ids):
     # Bool value is argument to right_side_up
     chip_pixels = list(range(chip_idx*49, chip_idx*49 + 49))
-    pixelids[chip] = (True, 'plain', chip_pixels)
+    pixelids[chip] = (False, 'plain', chip_pixels)
 
 chips = []
 for chipid, (right_side_up, shape, ids) in pixelids.items():
