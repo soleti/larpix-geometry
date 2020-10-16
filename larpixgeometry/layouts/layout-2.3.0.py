@@ -47,7 +47,7 @@ pixelids = dict()
 for chip_idx, chip in enumerate(chip_ids):
     # Bool value is argument to right_side_up
     chip_pixels = list(range(chip_idx*49, chip_idx*49 + 49))
-    pixelids[chip] = (True, 'plain', chip_pixels)
+    pixelids[chip] = (False, 'plain', chip_pixels)
 
 chips = []
 for chipid, (right_side_up, shape, ids) in pixelids.items():
