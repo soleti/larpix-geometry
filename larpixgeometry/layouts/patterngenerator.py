@@ -145,14 +145,22 @@ are numbered according to the following grid::
 '''
 
 grid_7x7_assignments_0_64_v2_2_1 = [
-    10,     2,      1,  0,  9,  8,  None,   None,
-    None,   None,   7,  16, 15, 14, 24,     23,
-    22,     21,     30, 35, 28, 29, None,   None,
-    None,   None,   36, 37, 42, 43, 44,     45,
-    38,     46,     47, 48, 39, 40, None,   None,
-    None,   41,     31, 32, 33, 34, 25,     26,
-    27,     17,     18, 19, 13, 20, None,   None,
-    None,   None,   12, 11, 6,  5,  4,      3,
+    # 10,     2,      1,  0,  9,  8,  None,   None,
+    38,     44,     43, 42, 37, 36,  None,   None,
+    # None,   None,   7,  16, 15, 14, 24,     23,
+    None,   None,   35, 30, 29, 28, 24,     23,
+    # 22,     21,     30, 35, 28, 29, None,   None,
+    22,     21,     16, 7, 14, 15, None,   None,
+    # None,   None,   36, 37, 42, 43, 44,     45,
+    None,   None,   8, 9, 0, 1, 2,     3,
+    # 38,     46,     47, 48, 39, 40, None,   None,
+    10,     4,     5, 6, 11, 12, None,   None,
+    # None,   41,     31, 32, 33, 34, 25,     26,
+    None,   13,     17, 18, 19, 20, 25,     26,
+    # 27,     17,     18, 19, 13, 20, None,   None,
+    27,     31,     32, 33, 41, 34, None,   None,
+    # None,   None,   12, 11, 6,  5,  4,      3,
+    None,   None,   40, 39, 48,  47,  46,      45,
     ]
 '''
 Assignments list maps channel to geometrical position in 7x7 grid.
@@ -168,6 +176,13 @@ are numbered according to the following grid::
 35  36  37  38  39  40  41
 42  43  44  45  46  47  48
 
+42  43  44  45  46  47  48
+35  36  37  38  39  40  41
+28  29  30  31  32  33  34
+21  22  23  24  25  26  27
+14  15  16  17  18  19  20
+7   8   9   10  11  12  13
+0   1   2   3   4   5   6
 '''
 
 

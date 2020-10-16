@@ -81,6 +81,15 @@ for pixel in pixelplane.pixels.values():
     c.circle(transform_x(pixel.x), transform_y(pixel.y), 0.4)
     c.drawCentredString(transform_x(pixel.x), transform_y(pixel.y),
             str(pixel.pixelid))
+c.circle(transform_x(0), transform_y(0), 1.0)
+p = c.beginPath()
+p.moveTo(transform_x(0),transform_y(0)); p.lineTo(transform_x(0),transform_y(height_orig/100))
+c.drawPath(p)
+c.drawCentredString(transform_x(0), transform_y(1.5*height_orig/100), 'Y')
+p = c.beginPath()
+p.moveTo(transform_x(0),transform_y(0)); p.lineTo(transform_x(width_orig/100),transform_y(0))
+c.drawPath(p)
+c.drawCentredString(transform_x(1.5*height_orig/100), transform_y(0), 'X')
 for chip, color in zip(pixelplane.chips.values(), colors):
     c.setFont('Courier-Bold', minor_font)
     c.setFillColorRGB(*color, alpha=1)
