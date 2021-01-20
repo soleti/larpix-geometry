@@ -24,7 +24,7 @@ class PixelPlane(object):
 
         >>> {'pixels': [(pixelid, x, y, [(pad_vertex_1_x, y), ...],
         ...     [(focus_vertex_1_x, y), ...]), ...],  # list of pixels
-        ...  'chips': [(chipid, [ch1_pixelid, ...,]), ...]  # list of chips
+        ...  'chips': [(chip_key, [ch1_pixelid, ...,]), ...]  # list of chips
         ... }
 
         If the sensor pad is just a via, pass an empty list for the pad
@@ -41,9 +41,9 @@ class PixelPlane(object):
             pixel.pad_outline = pad_outline
             pixel.focus_outline = focus_outline
             result.pixels[pixelid] = pixel
-        for i, (chipid, channel_connections) in enumerate(d['chips']):
+        for i, (chip_key, channel_connections) in enumerate(d['chips']):
             chip = GeomChip()
-            chip.chipid = chipid
+            chip.chip_key = chip_key
             for channel, pixelid in enumerate(channel_connections):
                 if pixelid == None:
                     chip.channel_connections.append(result.unconnected_pixel)
@@ -52,7 +52,7 @@ class PixelPlane(object):
                 else:
                     chip.channel_connections.append(result.pixels[pixelid])
                     result.pixels[pixelid].channel_connection = (chip, channel)
-            result.chips[chipid] = chip
+            result.chips[chip_key] = chip
         result.dimensions['x'] = d['x']
         result.dimensions['y'] = d['y']
         result.dimensions['width'] = d['width']
@@ -84,7 +84,15 @@ class GeomChip(object):
     '''
     def __init__(self):
         self.channel_connections = []
-        self.chipid = None
+        self.chip_key = None
+
+    @property
+    def chipid(self):
+        return self.chip_key
+
+    @chipid.setter
+    def chipid(self, val):
+        self.chip_key = val
 
 class Pixel(object):
     '''

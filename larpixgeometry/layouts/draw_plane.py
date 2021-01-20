@@ -14,6 +14,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('layoutversion')
 parser.add_argument('--pixelside', action='store_true')
+parser.add_argument('--major_font', default=2.5, type=float)
+parser.add_argument('--minor_font', default=0.5, type=float)
 args = parser.parse_args()
 version = args.layoutversion
 pixelside = args.pixelside
@@ -28,15 +30,16 @@ x_orig = dimensions['x']
 y_orig = dimensions['y']
 width_orig = dimensions['width']
 height_orig = dimensions['height']
+print(width_orig,'x',height_orig)
 
 colors = np.array([[228, 26, 28], [55, 126, 184], [77, 175, 74], [152,
-    78, 163], [255, 127, 0]])/256.0
-colors = np.tile(colors, (100,1))
+    78, 163],])/256.0
+colors = np.tile(colors, (len(pixelplane.chips),1))
 print('colors',len(colors))
-
 
 canvas_width, canvas_height = letter
 c = canvas.Canvas('layout-' + version + '-' + sidename + 'side.pdf', pagesize=letter)
+c.setLineWidth(0.01)
 
 margin = 1*inch
 page_center_x = canvas_width/2
@@ -68,32 +71,37 @@ def transform_x(xcoord):
 def transform_y(ycoord):
     return (ycoord * scalefactor + translation_y)
 
-minor_font = 3
-major_font = 20
+minor_font = args.minor_font
+major_font = args.major_font
 
 c.setFont('Helvetica', major_font)
-c.drawString(3*inch, 10*inch, 'Layout %s (%d chips)' % (version,
-    len(pixelplane.chips)))
-c.drawString(3*inch, 9.6*inch, '(view from %s side)' % sidename)
+c.drawCentredString(canvas_width/2,canvas_height-margin, 'Layout {} ({} chips) [view from {} side]'.format(version, len(pixelplane.chips),sidename))
+
+# draw pixels
 c.setFont('Courier', minor_font)
 colorkey = []
 for pixel in pixelplane.pixels.values():
-    c.circle(transform_x(pixel.x), transform_y(pixel.y), 0.4)
+    c.circle(transform_x(pixel.x), transform_y(pixel.y), minor_font/2)
     c.drawCentredString(transform_x(pixel.x), transform_y(pixel.y),
             str(pixel.pixelid))
-c.circle(transform_x(0), transform_y(0), 1.0)
+
+# draw origin
+c.setFont('Helvetica', minor_font)
+c.circle(transform_x(0), transform_y(0), major_font/2)
 p = c.beginPath()
-p.moveTo(transform_x(0),transform_y(0)); p.lineTo(transform_x(0),transform_y(height_orig/100))
+p.moveTo(transform_x(0), transform_y(0)); p.lineTo(transform_x(0), transform_y(major_font))
 c.drawPath(p)
-c.drawCentredString(transform_x(0), transform_y(1.5*height_orig/100), 'Y')
+c.drawString(transform_x(0), transform_y(major_font/2), 'Y')
 p = c.beginPath()
-p.moveTo(transform_x(0),transform_y(0)); p.lineTo(transform_x(width_orig/100),transform_y(0))
+p.moveTo(transform_x(0), transform_y(0)); p.lineTo(transform_x(major_font), transform_y(0))
 c.drawPath(p)
-c.drawCentredString(transform_x(1.5*height_orig/100), transform_y(0), 'X')
+c.drawString(transform_x(major_font/2), transform_y(0), 'X')
+
+# draw chip/channels
 for chip, color in zip(pixelplane.chips.values(), colors):
     c.setFont('Courier-Bold', minor_font)
     c.setFillColorRGB(*color, alpha=1)
-    colorkey.append(['Chip %d' % chip.chipid, color])
+    colorkey.append(['Chip {}'.format(chip.chipid), color])
     x_sum = 0
     y_sum = 0
     count = 0
@@ -103,7 +111,7 @@ for chip, color in zip(pixelplane.chips.values(), colors):
                     transform_y(pixel.y)-minor_font,
                     str(channel))
             x_sum += transform_x(pixel.x)
-            y_sum += transform_y(pixel.y) - 5
+            y_sum += transform_y(pixel.y)
             count += 1
     x_avg = x_sum/float(count)
     y_avg = y_sum/float(count)
