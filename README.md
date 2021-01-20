@@ -33,9 +33,9 @@ import yaml
 with open('pixel_geometry.yaml', 'r') as f:
     board = PixelPlane.fromDict(yaml.load(f))
 
-chipids = list(board.chips.keys())
-chip0 = board.chips[chipids[0]]
-print('Retrieving %d' % chip0.chipid)
+chip_keys = list(board.chips.keys())
+chip0 = board.chips[chip_keys[0]]
+print('Retrieving {}'.format(chip0.chip_key))
 # print list of (x, y) for each channel
 print('Channel ID |     Position\n-----------|-------------')
 for channel, pixel in enumerate(chip0.channel_connections):
@@ -44,13 +44,13 @@ for channel, pixel in enumerate(chip0.channel_connections):
 # Find which channel corresponds to pixel 100
 pixel100 = board.pixels[100]
 chip, channel = pixel100.channel_connection
-print('Pixel 100 is connected to chip %d, channel %d' %
-        (chip.chipid, channel))
+print('Pixel 100 is connected to chip {}, channel {}'.format(chip.chip_key,
+  channel))
 
 # Find which channels correspond to pixels with x locations greater than 100
 connection_list = board.channels_where(lambda pixel:pixel.x > 100)
 for chip, channel in connection_list:
-    print('Chip %d, channel %d' % (chip.chipid, channel))
+    print('Chip {}, channel {}'.format(chip.chip_key, channel))
 ```
 
 Units and coordinates
@@ -79,20 +79,20 @@ follows:
 
 - ``chips``: A nested list containing one element per ASIC. Each element is
   structured as a 2-element list, with the 0th element being the Chip
-ID, and the 1st element being a list where the ``i``-th element is the Pixel
+key, and the 1st element being a list where the ``i``-th element is the Pixel
 ID connected to Channel ``i``. (A value of ``null`` means the
 channel is not connected/bonded to any pixel.) For example:
 
 ```
 chips:
-- - 1  # <-- Chip ID = 1
+- - '1-1-1'  # <-- Chip key = 1-1-1
   - - 14  # <-- Channel 0 connected to Pixel 14
     - 13  # <-- Channel 1 connected to Pixel 13
 ...
-- - 20  # <-- Chip ID = 2
-  - - 821 # <-- Chip 2, Channel 0 connected to Pixel 821
-    - 822 # <-- Chip 2, Channel 1 connected to Pixel 822
-    - null # <-- Chip 2, Channel 2 not bonded to a pixel
+- - '1-2-20'  # <-- Chip key = 1-2-20
+  - - 821 # <-- Chip 20, Channel 0 connected to Pixel 821
+    - 822 # <-- Chip 20, Channel 1 connected to Pixel 822
+    - null # <-- Chip 20, Channel 2 not bonded to a pixel
 ...
 ```
 
