@@ -41,4 +41,4 @@ for chipid, (right_side_up, shape, ids_0, ids_1, ids_2, ids_3) in pixelids.items
 
 with open('layout-2.2.0.yaml', 'w') as f:
     yaml.dump({'pixels': pixels, 'chips': chips, 'x': -width/2, 'y': -height/2,
-        'width': width, 'height': height}, f)
+        'width': width, 'height': height, 'format_version': '0.0.0'}, f)

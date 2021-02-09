@@ -14,6 +14,7 @@ class PixelPlane(object):
         self.dimensions = {'x': 0, 'y': 0, 'width': 0, 'height': 0}
         self.unconnected_pixel = Pixel()
         self.unconnected_pixel.channel_connection = []
+        self.format_version = '..'
 
     @classmethod
     def fromDict(cls, d):
@@ -25,6 +26,7 @@ class PixelPlane(object):
         >>> {'pixels': [(pixelid, x, y, [(pad_vertex_1_x, y), ...],
         ...     [(focus_vertex_1_x, y), ...]), ...],  # list of pixels
         ...  'chips': [(chip_key, [ch1_pixelid, ...,]), ...]  # list of chips
+        ...  'format_version': 'X.X.X' # version for formatting
         ... }
 
         If the sensor pad is just a via, pass an empty list for the pad
@@ -33,6 +35,10 @@ class PixelPlane(object):
 
         '''
         result = cls()
+        
+        # maybe someday do something different for different formatting versions
+        result.format_version = d['format_version'] 
+
         for i, (pixelid, x, y, pad_outline, focus_outline) in enumerate(d['pixels']):
             pixel = Pixel()
             pixel.pixelid = pixelid
@@ -41,6 +47,7 @@ class PixelPlane(object):
             pixel.pad_outline = pad_outline
             pixel.focus_outline = focus_outline
             result.pixels[pixelid] = pixel
+
         for i, (chip_key, channel_connections) in enumerate(d['chips']):
             chip = GeomChip()
             chip.chip_key = chip_key
@@ -53,10 +60,12 @@ class PixelPlane(object):
                     chip.channel_connections.append(result.pixels[pixelid])
                     result.pixels[pixelid].channel_connection = (chip, channel)
             result.chips[chip_key] = chip
+
         result.dimensions['x'] = d['x']
         result.dimensions['y'] = d['y']
         result.dimensions['width'] = d['width']
         result.dimensions['height'] = d['height']
+
         return result
 
     def channels_where(self, condition):

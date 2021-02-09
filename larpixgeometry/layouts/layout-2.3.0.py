@@ -6,6 +6,8 @@ packaged 3x3-rev2 pixel tile
 import yaml
 import patterngenerator as pg
 
+format_version = '0.0.0'
+
 pixels = []
 subgrid_width = 16
 chip_ids = list(range(11,20)) \
@@ -57,5 +59,5 @@ for chipid, (right_side_up, shape, ids) in pixelids.items():
 print('chips',len(chips))
 
 with open('layout-2.3.0.yaml', 'w') as f:
-    yaml.dump({'pixels': pixels, 'chips': chips, 'x': -width/2, 'y': -height/2,
+    yaml.dump({'format_version': format_version, 'pixels': pixels, 'chips': chips, 'x': -width/2, 'y': -height/2,
         'width': width, 'height': height}, f)

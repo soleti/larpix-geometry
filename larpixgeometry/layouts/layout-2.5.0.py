@@ -9,6 +9,7 @@ import yaml
 import patterngenerator as pg
 
 filename = 'layout-2.5.0.yaml'
+format_version = '1.0.0' # use chip keys
 
 pixels = []
 pixelids = dict()
@@ -78,5 +79,5 @@ print('chips',len(chips))
 print('pixels',len(pixels))
 
 with open(filename, 'w') as f:
-    yaml.dump({'pixels': pixels, 'chips': chips, 'x': -(TILE_WIDTH * N_TILES_X)/2, 'y': -(TILE_HEIGHT * N_TILES_Y)/2,
+    yaml.dump({'format_version': format_version, 'pixels': pixels, 'chips': chips, 'x': -(TILE_WIDTH * N_TILES_X)/2, 'y': -(TILE_HEIGHT * N_TILES_Y)/2,
         'width': TILE_WIDTH * N_TILES_X, 'height': TILE_HEIGHT * N_TILES_Y}, f)
