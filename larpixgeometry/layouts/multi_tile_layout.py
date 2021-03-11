@@ -65,7 +65,7 @@ for chip in chipids:
     for channel, pixel in enumerate(board.chips[chip].channel_connections):
         if pixel.x !=0 and pixel.y != 0:
             key = chip*1000 + channel
-            chip_channel[key] = [int(pixel.x // PIXEL_PITCH), int(pixel.y // PIXEL_PITCH)]
+            chip_channel[key] = [round(pixel.x / PIXEL_PITCH), round(pixel.y / PIXEL_PITCH)]
 
 with open('multi_tile_layout.yaml', 'w') as f:
     yaml.dump({'pixel_pitch': PIXEL_PITCH,
