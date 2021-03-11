@@ -21,7 +21,10 @@ import yaml
 
 import larpixgeometry.pixelplane
 
-PIXEL_FILE = 'layout-2.4.0.yaml'
+LAYOUT_VERSION = '2.4.0'
+FORMAT_VERSION = '1.0.0'
+
+PIXEL_FILE = 'layout-%s.yaml' % LAYOUT_VERSION
 PIXEL_PITCH = 4.434
 
 with open(PIXEL_FILE, 'r') as pf:
@@ -67,7 +70,7 @@ for chip in chipids:
             key = chip*1000 + channel
             chip_channel[key] = [round(pixel.x / PIXEL_PITCH), round(pixel.y / PIXEL_PITCH)]
 
-with open('multi_tile_layout.yaml', 'w') as f:
+with open('multi_tile_layout-%s.yaml' % FORMAT_VERSION, 'w') as f:
     yaml.dump({'pixel_pitch': PIXEL_PITCH,
                'tile_positions': tile_positions,
                'tile_chip_to_io': tile_chip_io_channel_io_group,
