@@ -43,15 +43,18 @@ io_channels[1] = list(range(35,61))
 io_channels[2] = list(range(61,91))
 io_channels[3] = list(range(91,111))
 
-## These positions need to be changed with values coming from the GDML file
-tile_positions = {1: [[0,0,0],[0,0,1]],
-                  2: [[0,0,0],[0,0,1]],
-                  3: [[0,0,0],[0,0,1]],
-                  4: [[0,0,0],[0,0,1]],
-                  5: [[0,0,0],[0,0,1]],
-                  6: [[0,0,0],[0,0,1]],
-                  7: [[0,0,0],[0,0,1]],
-                  8: [[0,0,0],[0,0,1]]}
+## These positions comes from the GDML file.
+## The numbers are in mm and were provided by Patrick Koller.
+## The anode is on the yz plane with the pixels oriented
+## towards the positive x axis
+tile_positions = {1: [[0,465.2,-155.2],[1,0,0]],
+                  2: [[0,465.2,155.2],[1,0,0]],
+                  3: [[0,155.2,-155.2],[1,0,0]],
+                  4: [[0,155.2,155.2],[1,0,0]],
+                  5: [[0,-155.2,-155.2],[1,0,0]],
+                  6: [[0,-155.2,155.2],[1,0,0]],
+                  7: [[0,-465.2,-155.2],[1,0,0]],
+                  8: [[0,-465.2,155.2],[1,0,0]]}
 
 tile_chip_io_channel_io_group = {it:{} for it in range(1,len(tiles)+1)}
 
@@ -70,8 +73,9 @@ for chip in chipids:
             key = chip*1000 + channel
             chip_channel[key] = [round(pixel.x / PIXEL_PITCH), round(pixel.y / PIXEL_PITCH)]
 
-with open('multi_tile_layout-%s.yaml' % FORMAT_VERSION, 'w') as f:
-    yaml.dump({'pixel_pitch': PIXEL_PITCH,
-               'tile_positions': tile_positions,
-               'tile_chip_to_io': tile_chip_io_channel_io_group,
-               'chip_channel_to_position': chip_channel}, f)
+if __name__ == "__main__":
+    with open('multi_tile_layout-%s.yaml' % FORMAT_VERSION, 'w') as f:
+        yaml.dump({'pixel_pitch': PIXEL_PITCH,
+                   'tile_positions': tile_positions,
+                   'tile_chip_to_io': tile_chip_io_channel_io_group,
+                   'chip_channel_to_position': chip_channel}, f)
