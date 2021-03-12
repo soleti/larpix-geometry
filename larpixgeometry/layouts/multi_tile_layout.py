@@ -4,6 +4,10 @@ describing the physical structures (e.g. pixel pads and anode tiles) and
 software/electrical associations (e.g. IO group, IO channel, chip ID) for
 a multi-tile LArPix anode
 
+- tile_layout_version: version of the LArPix single-tile layout
+- multitile_layout_version: version of the multi-tile layout in the X.Y.Z. format
+    where X represents the ASIC version, Y represents the single-tile version
+    (incremented from 0), and Z represents the number of tiles in the layout.
 - pixel_pitch: pixel pitch value in mm
 - tile_positions: dictionary where the key is tile ID of type integer
     and the value is a pair of vectors: position and orientation
@@ -22,19 +26,21 @@ import yaml
 import larpixgeometry.pixelplane
 
 LAYOUT_VERSION = '2.4.0'
-FORMAT_VERSION = '1.0.0'
+FORMAT_VERSION = '2.0.16'
 
 PIXEL_FILE = 'layout-%s.yaml' % LAYOUT_VERSION
 PIXEL_PITCH = 4.434
+
+N_TILES = 16
+N_IO_CHANNELS = 4
 
 with open(PIXEL_FILE, 'r') as pf:
     board = larpixgeometry.pixelplane.PixelPlane.fromDict(yaml.load(pf, Loader=yaml.FullLoader))
 
 chipids = list(board.chips.keys())
 
-## In this configuration we have 8 tiles
-tiles = list(range(1,8+1))
-io_channels = [[] for i in range(4)]
+tiles = list(range(1,N_TILES+1))
+io_channels = [[] for i in range(N_IO_CHANNELS)]
 
 ## These numbers were taken from a standard network configuration
 ## for a LArPix tile
@@ -54,11 +60,19 @@ tile_positions = {1: [[0,465.2,-155.2],[1,0,0]],
                   5: [[0,-155.2,-155.2],[1,0,0]],
                   6: [[0,-155.2,155.2],[1,0,0]],
                   7: [[0,-465.2,-155.2],[1,0,0]],
-                  8: [[0,-465.2,155.2],[1,0,0]]}
+                  8: [[0,-465.2,155.2],[1,0,0]],
+                  9: [[0,465.2,-155.2],[-1,0,0]],
+                  10: [[0,465.2,155.2],[-1,0,0]],
+                  11: [[0,155.2,-155.2],[-1,0,0]],
+                  12: [[0,155.2,155.2],[-1,0,0]],
+                  13: [[0,-155.2,-155.2],[-1,0,0]],
+                  14: [[0,-155.2,155.2],[-1,0,0]],
+                  15: [[0,-465.2,-155.2],[-1,0,0]],
+                  16: [[0,-465.2,155.2],[-1,0,0]]}
 
-tile_chip_io_channel_io_group = {it:{} for it in range(1,len(tiles)+1)}
+tile_chip_io_channel_io_group = {it:{} for it in range(1,N_TILES+1)}
 
-tile_io_group_io_channel = {t: [t*1000+i for i in range(1,4+1)] for t in tiles}
+tile_io_group_io_channel = {t: [t*1000+i for i in range(1,N_IO_CHANNELS+1)] for t in tiles}
 
 for tile_id in tile_io_group_io_channel:
     for i,io in enumerate(io_channels):
@@ -75,7 +89,9 @@ for chip in chipids:
 
 if __name__ == "__main__":
     with open('multi_tile_layout-%s.yaml' % FORMAT_VERSION, 'w') as f:
-        yaml.dump({'pixel_pitch': PIXEL_PITCH,
+        yaml.dump({'tile_layout_version': LAYOUT_VERSION,
+                   'multitile_layout_version': FORMAT_VERSION,
+                   'pixel_pitch': PIXEL_PITCH,
                    'tile_positions': tile_positions,
                    'tile_chip_to_io': tile_chip_io_channel_io_group,
                    'chip_channel_to_position': chip_channel}, f)
