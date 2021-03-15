@@ -14,7 +14,7 @@ setup(
         author_email='skohn@lbl.gov',
         keywords='dune physics',
         packages=find_packages(),
-        install_requires=['pyyaml', 'reportlab'],
+        install_requires=['pyyaml', 'reportlab', 'fire'],
         package_data={
             'larpixgeometry.layouts':['*.yaml']
         },

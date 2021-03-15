@@ -21,83 +21,97 @@ a multi-tile LArPix anode
     stored as multiples of the pixel pitch of type integer
 """
 
-import yaml
 import json
+import fire
+import yaml
 import larpixgeometry.pixelplane
 
 LAYOUT_VERSION = '2.4.0'
 FORMAT_VERSION = '2.0.16'
-
-PIXEL_FILE = 'layout-%s.yaml' % LAYOUT_VERSION
-NETWORK_CONFIGURATION = 'network-10x10-tile.json'
 PIXEL_PITCH = 4.434
 
-N_TILES = 16
+def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=PIXEL_PITCH):
+    """
+    Function that generates the multi-layout YAML file
+    """
 
-with open(PIXEL_FILE, 'r') as pf:
-    board = larpixgeometry.pixelplane.PixelPlane.fromDict(yaml.load(pf, Loader=yaml.FullLoader))
+    with open(tile_layout_file, 'r') as pf:
+        board = larpixgeometry.pixelplane.PixelPlane.fromDict(yaml.load(pf, Loader=yaml.FullLoader))
 
-with open(NETWORK_CONFIGURATION, 'r') as nc:
-    network_config = json.load(nc)
+    with open(network_config_file, 'r') as nc:
+        if '.txt' in network_config_file:
+            network_configs = nc.readlines()
+        elif '.json' in network_config_file:
+            network_configs = [network_config_file]*n_tiles
+        else:
+            raise ValueError("Network configuration file must have txt or json extension")
 
-n_io_channels = len(network_config['network']['1'].keys())
+    chipids = list(board.chips.keys())
 
-chipids = list(board.chips.keys())
+    io_channels_tile = {}
 
-tiles = list(range(1,N_TILES+1))
-io_channels = [[] for i in range(n_io_channels)]
+    for it,network_config in enumerate(network_configs):
 
-## These numbers were taken from a standard network configuration
-## for a LArPix tile
-for i in range(n_io_channels):
-    nodes = network_config['network']['1'][str(i+1)]['nodes']
-    for node in nodes:
-        if isinstance(node['chip_id'], int):
-            io_channels[i].append(node['chip_id'])
+        with open(network_config, 'r') as nc:
+            nc_json = json.load(nc)
 
-## These positions comes from the GDML file.
-## The numbers are in mm and were provided by Patrick Koller.
-## The anode is on the yz plane with the pixels oriented
-## towards the positive x axis
-tile_positions = {1: [[-315.1745,465.2,-155.2],[1,0,0]],
-                  2: [[-315.1745,465.2,155.2],[1,0,0]],
-                  3: [[-315.1745,155.2,-155.2],[1,0,0]],
-                  4: [[-315.1745,155.2,155.2],[1,0,0]],
-                  5: [[-315.1745,-155.2,-155.2],[1,0,0]],
-                  6: [[-315.1745,-155.2,155.2],[1,0,0]],
-                  7: [[-315.1745,-465.2,-155.2],[1,0,0]],
-                  8: [[-315.1745,-465.2,155.2],[1,0,0]],
-                  9: [[-315.1745,465.2,-155.2],[-1,0,0]],
-                  10: [[315.1745,465.2,155.2],[-1,0,0]],
-                  11: [[315.1745,155.2,-155.2],[-1,0,0]],
-                  12: [[315.1745,155.2,155.2],[-1,0,0]],
-                  13: [[315.1745,-155.2,-155.2],[-1,0,0]],
-                  14: [[315.1745,-155.2,155.2],[-1,0,0]],
-                  15: [[315.1745,-465.2,-155.2],[-1,0,0]],
-                  16: [[315.1745,-465.2,155.2],[-1,0,0]]}
+        io_channels = nc_json['network']['1']
+        io_channels_tile[it+1] = {}
 
-tile_chip_io_channel_io_group = {it:{} for it in range(1,N_TILES+1)}
+        for io_channel in io_channels:
+            nodes = io_channels[io_channel]['nodes']
+            for node in nodes:
+                chip_id = node['chip_id']
+                if isinstance(chip_id, int):
+                    if int(io_channel) in io_channels_tile[it+1]:
+                        io_channels_tile[it+1][int(io_channel)].append(chip_id)
+                    else:
+                        io_channels_tile[it+1][int(io_channel)] = [chip_id]
 
-tile_io_group_io_channel = {t: [t*1000+i for i in range(1,n_io_channels+1)] for t in tiles}
+    ## These positions comes from the GDML file.
+    ## The numbers are in mm and were provided by Patrick Koller.
+    ## The anode is on the yz plane with the pixels oriented
+    ## towards the positive x axis
+    tile_positions = {1: [[-315.1745,465.2,-155.2],[1,0,0]],
+                      2: [[-315.1745,465.2,155.2],[1,0,0]],
+                      3: [[-315.1745,155.2,-155.2],[1,0,0]],
+                      4: [[-315.1745,155.2,155.2],[1,0,0]],
+                      5: [[-315.1745,-155.2,-155.2],[1,0,0]],
+                      6: [[-315.1745,-155.2,155.2],[1,0,0]],
+                      7: [[-315.1745,-465.2,-155.2],[1,0,0]],
+                      8: [[-315.1745,-465.2,155.2],[1,0,0]],
+                      9: [[-315.1745,465.2,-155.2],[-1,0,0]],
+                      10: [[315.1745,465.2,155.2],[-1,0,0]],
+                      11: [[315.1745,155.2,-155.2],[-1,0,0]],
+                      12: [[315.1745,155.2,155.2],[-1,0,0]],
+                      13: [[315.1745,-155.2,-155.2],[-1,0,0]],
+                      14: [[315.1745,-155.2,155.2],[-1,0,0]],
+                      15: [[315.1745,-465.2,-155.2],[-1,0,0]],
+                      16: [[315.1745,-465.2,155.2],[-1,0,0]]}
 
-for tile_id in tile_io_group_io_channel:
-    for i,io in enumerate(io_channels):
-        for chip in io:
-            tile_chip_io_channel_io_group[tile_id][chip] = tile_io_group_io_channel[tile_id][i]
+    tile_chip_io_channel_io_group = {it:{} for it in range(1,n_tiles+1)}
 
-chip_channel = {}
+    for tile_id in io_channels_tile:
+        io_channels = io_channels_tile[tile_id]
+        for io in io_channels:
+            for chip in io_channels[io]:
+                tile_chip_io_channel_io_group[tile_id][chip] = tile_id*1000+io
 
-for chip in chipids:
-    for channel, pixel in enumerate(board.chips[chip].channel_connections):
-        if pixel.x !=0 and pixel.y != 0:
-            key = chip*1000 + channel
-            chip_channel[key] = [round(pixel.x / PIXEL_PITCH), round(pixel.y / PIXEL_PITCH)]
+    chip_channel = {}
 
-if __name__ == "__main__":
-    with open('multi_tile_layout-%s.yaml' % FORMAT_VERSION, 'w') as f:
+    for chip in chipids:
+        for channel, pixel in enumerate(board.chips[chip].channel_connections):
+            if pixel.x !=0 and pixel.y != 0:
+                key = chip*1000 + channel
+                chip_channel[key] = [round(pixel.x / pixel_pitch), round(pixel.y / pixel_pitch)]
+
+    with open('multi_tile_layout-%s2.yaml' % FORMAT_VERSION, 'w') as f:
         yaml.dump({'tile_layout_version': LAYOUT_VERSION,
                    'multitile_layout_version': FORMAT_VERSION,
-                   'pixel_pitch': PIXEL_PITCH,
+                   'pixel_pitch': pixel_pitch,
                    'tile_positions': tile_positions,
                    'tile_chip_to_io': tile_chip_io_channel_io_group,
                    'chip_channel_to_position': chip_channel}, f)
+
+if __name__ == "__main__":
+    fire.Fire(generate_layout)
