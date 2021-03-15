@@ -22,57 +22,63 @@ a multi-tile LArPix anode
 """
 
 import yaml
-
+import json
 import larpixgeometry.pixelplane
 
 LAYOUT_VERSION = '2.4.0'
 FORMAT_VERSION = '2.0.16'
 
 PIXEL_FILE = 'layout-%s.yaml' % LAYOUT_VERSION
+NETWORK_CONFIGURATION = 'network-10x10-tile.json'
 PIXEL_PITCH = 4.434
 
 N_TILES = 16
-N_IO_CHANNELS = 4
 
 with open(PIXEL_FILE, 'r') as pf:
     board = larpixgeometry.pixelplane.PixelPlane.fromDict(yaml.load(pf, Loader=yaml.FullLoader))
 
+with open(NETWORK_CONFIGURATION, 'r') as nc:
+    network_config = json.load(nc)
+
+n_io_channels = len(network_config['network']['1'].keys())
+
 chipids = list(board.chips.keys())
 
 tiles = list(range(1,N_TILES+1))
-io_channels = [[] for i in range(N_IO_CHANNELS)]
+io_channels = [[] for i in range(n_io_channels)]
 
 ## These numbers were taken from a standard network configuration
 ## for a LArPix tile
-io_channels[0] = list(range(11,35))
-io_channels[1] = list(range(35,61))
-io_channels[2] = list(range(61,91))
-io_channels[3] = list(range(91,111))
+for i in range(n_io_channels):
+    nodes = network_config['network']['1'][str(i+1)]['nodes']
+    for node in nodes:
+        if isinstance(node['chip_id'], int):
+            io_channels[i].append(node['chip_id'])
 
 ## These positions comes from the GDML file.
 ## The numbers are in mm and were provided by Patrick Koller.
 ## The anode is on the yz plane with the pixels oriented
 ## towards the positive x axis
-tile_positions = {1: [[0,465.2,-155.2],[1,0,0]],
-                  2: [[0,465.2,155.2],[1,0,0]],
-                  3: [[0,155.2,-155.2],[1,0,0]],
-                  4: [[0,155.2,155.2],[1,0,0]],
-                  5: [[0,-155.2,-155.2],[1,0,0]],
-                  6: [[0,-155.2,155.2],[1,0,0]],
-                  7: [[0,-465.2,-155.2],[1,0,0]],
-                  8: [[0,-465.2,155.2],[1,0,0]],
-                  9: [[0,465.2,-155.2],[-1,0,0]],
-                  10: [[0,465.2,155.2],[-1,0,0]],
-                  11: [[0,155.2,-155.2],[-1,0,0]],
-                  12: [[0,155.2,155.2],[-1,0,0]],
-                  13: [[0,-155.2,-155.2],[-1,0,0]],
-                  14: [[0,-155.2,155.2],[-1,0,0]],
-                  15: [[0,-465.2,-155.2],[-1,0,0]],
-                  16: [[0,-465.2,155.2],[-1,0,0]]}
+tile_positions = {1: [[-315.1745,465.2,-155.2],[1,0,0]],
+                  2: [[-315.1745,465.2,155.2],[1,0,0]],
+                  3: [[-315.1745,155.2,-155.2],[1,0,0]],
+                  4: [[-315.1745,155.2,155.2],[1,0,0]],
+                  5: [[-315.1745,-155.2,-155.2],[1,0,0]],
+                  6: [[-315.1745,-155.2,155.2],[1,0,0]],
+                  7: [[-315.1745,-465.2,-155.2],[1,0,0]],
+                  8: [[-315.1745,-465.2,155.2],[1,0,0]],
+                  9: [[-315.1745,465.2,-155.2],[-1,0,0]],
+                  10: [[315.1745,465.2,155.2],[-1,0,0]],
+                  11: [[315.1745,155.2,-155.2],[-1,0,0]],
+                  12: [[315.1745,155.2,155.2],[-1,0,0]],
+                  13: [[315.1745,-155.2,-155.2],[-1,0,0]],
+                  14: [[315.1745,-155.2,155.2],[-1,0,0]],
+                  15: [[315.1745,-465.2,-155.2],[-1,0,0]],
+                  16: [[315.1745,-465.2,155.2],[-1,0,0]]}
 
 tile_chip_io_channel_io_group = {it:{} for it in range(1,N_TILES+1)}
 
-tile_io_group_io_channel = {t: [t*1000+i for i in range(1,N_IO_CHANNELS+1)] for t in tiles}
+tile_io_group_io_channel = {t: [t*1000+i for i in range(1,n_io_channels+1)] for t in tiles}
 
 for tile_id in tile_io_group_io_channel:
     for i,io in enumerate(io_channels):
