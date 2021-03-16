@@ -32,7 +32,14 @@ PIXEL_PITCH = 4.434
 
 def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=PIXEL_PITCH):
     """
-    Function that generates the multi-layout YAML file
+    Function that generates the multi-layout YAML file.
+
+    Args:
+        tile_layout_file (str): YAML file containing the tile layout
+        network_config_file (str): JSON file containing the network configuration
+            or txt file with a list of JSON files (one per tile)
+        n_tiles (int): number of tiles
+        pixel_pitch (float): value of pixel pitch, default is PIXEL_PITCH
     """
 
     with open(tile_layout_file, 'r') as pf:
