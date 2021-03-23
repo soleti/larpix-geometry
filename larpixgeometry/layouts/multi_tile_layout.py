@@ -10,14 +10,18 @@ a multi-tile LArPix anode
     (incremented from 0), and Z represents the number of tiles in the layout.
 - pixel_pitch: pixel pitch value in mm
 - tile_positions: dictionary where the key is tile ID of type integer
-    and the value is a pair of vectors: position and orientation
-    of the tile
+    and the value is the position vector of the tile center
+- tile_orientations: dictionary where the key is tile ID of type integer
+    and the value is the direction vector of the tile, with respect to
+    the reference frame in larpix-geometry
 - tile_chip_to_io: nested dictionary where the first key is tile ID
     and the second key is chip ID and the value is (IO channel, IO group).
     Tile ID, chip ID, IO channel, and IO group are all type integers
 - chip_channel_to_position: dictionary where the key is (channel ID, chip ID)
-  and the value is (x-position, y-position), stored as multiples of the pixel pitch
-  of type integer
+    and the value is (x-position, y-position), stored as multiples of the pixel pitch
+    of type integer
+- tile_indeces: dictionary where the key is the tile ID and the value is a tuple in
+    the format (TPC ID, anode ID, tile ID within the anode)
 """
 
 import json
