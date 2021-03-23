@@ -21,7 +21,7 @@ a multi-tile LArPix anode
     and the value is (x-position, y-position), stored as multiples of the pixel pitch
     of type integer
 - tile_indeces: dictionary where the key is the tile ID and the value is a tuple in
-    the format (TPC ID, anode ID, tile ID within the anode)
+    the format (module ID, anode ID, tile ID within the anode)
 """
 
 import json
