@@ -116,6 +116,10 @@ def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=
                       15: [ 315.1745,-465.2,-155.2],
                       16: [ 315.1745,-465.2, 155.2]}
 
+    tpc_centers = {1: [0, -218.236, 0],
+                   2: [0, -218.236, 0]}
+
+                             # z  y  x
     tile_orientations = {1:  [ 1,-1, 1],
                          2:  [ 1, 1,-1],
                          3:  [ 1,-1, 1],
@@ -164,6 +168,7 @@ def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=
                    'pixel_pitch': pixel_pitch,
                    'tile_positions': tile_positions,
                    'tile_orientations': tile_orientations,
+                   'tpc_centers': tpc_centers,
                    'tile_chip_to_io': tile_chip_io_channel_io_group,
                    'tile_indeces': tile_indeces,
                    'chip_channel_to_position': chip_channel}, f)
