@@ -50,7 +50,7 @@ def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=
 
     with open(network_config_file, 'r') as nc:
         if '.txt' in network_config_file:
-            network_configs = nc.readlines()
+            network_configs = nc.read().splitlines()
         elif '.json' in network_config_file:
             network_configs = [network_config_file]*n_tiles
         else:
@@ -59,14 +59,17 @@ def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=
     chipids = list(board.chips.keys())
 
     io_channels_tile = {}
+    io_group_tile = {}
 
     for it,network_config in enumerate(network_configs):
 
         with open(network_config, 'r') as nc:
             nc_json = json.load(nc)
 
-        io_channels = nc_json['network']['1']
+        io_group = list(nc_json['network'].keys())[0]
+        io_channels = nc_json['network'][io_group]
         io_channels_tile[it+1] = {}
+        io_group_tile[it+1] = int(io_group)
 
         for io_channel in io_channels:
             nodes = io_channels[io_channel]['nodes']
@@ -139,11 +142,11 @@ def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=
 
     tile_chip_io_channel_io_group = {it:{} for it in range(1,n_tiles+1)}
 
-    for tile_id in io_channels_tile:
-        io_channels = io_channels_tile[tile_id]
-        for io in io_channels:
-            for chip in io_channels[io]:
-                tile_chip_io_channel_io_group[tile_id][chip] = tile_id*1000 + io
+    for it in tile_chip_io_channel_io_group:
+        io_channels = io_channels_tile[it]
+        for io_channel in io_channels:
+            for chip in io_channels[io_channel]:
+                tile_chip_io_channel_io_group[it][chip] = io_group_tile[it]*1000 + io_channel
 
     chip_channel = {}
 
