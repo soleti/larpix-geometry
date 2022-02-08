@@ -30,10 +30,10 @@ import yaml
 import larpixgeometry.pixelplane
 
 LAYOUT_VERSION = '2.4.0'
-FORMAT_VERSION = '2.0.16'
+FORMAT_VERSION = '2.3.16'
 PIXEL_PITCH = 4.434
 
-def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=PIXEL_PITCH):
+def generate_layout(tile_layout_file, network_config_file, n_tiles=1, pixel_pitch=PIXEL_PITCH):
     """
     Function that generates the multi-layout YAML file.
 
@@ -45,12 +45,13 @@ def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=
         pixel_pitch (float): value of pixel pitch, default is PIXEL_PITCH
     """
 
-    with open(tile_layout_file, 'r') as pf:
-        board = larpixgeometry.pixelplane.PixelPlane.fromDict(yaml.load(pf, Loader=yaml.FullLoader))
+    with open(tile_layout_file, 'r', encoding='utf-8') as pf_file:
+        board = larpixgeometry.pixelplane.PixelPlane.fromDict(yaml.load(pf_file, Loader=yaml.FullLoader))
 
-    with open(network_config_file, 'r') as nc:
+    with open(network_config_file, 'r', encoding='utf-8') as nc_file:
         if '.txt' in network_config_file:
-            network_configs = nc.read().splitlines()
+            network_configs = nc_file.read().splitlines()
+            n_tiles = len(network_configs)
         elif '.json' in network_config_file:
             network_configs = [network_config_file]*n_tiles
         else:
@@ -61,10 +62,10 @@ def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=
     io_channels_tile = {}
     io_group_tile = {}
 
-    for it,network_config in enumerate(network_configs):
+    for it, network_config in enumerate(network_configs):
 
-        with open(network_config, 'r') as nc:
-            nc_json = json.load(nc)
+        with open(network_config, 'r', encoding='utf-8') as nc_file:
+            nc_json = json.load(nc_file)
 
         io_group = list(nc_json['network'].keys())[0]
         io_channels = nc_json['network'][io_group]
@@ -85,42 +86,39 @@ def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=
     ## The numbers are in mm and were provided by Patrick Koller.
     ## The anode is on the yz plane with the pixels oriented
     ## towards the positive x axis
-    tile_indeces = {1:  [1,1,1],
-                    2:  [1,1,2],
-                    3:  [1,1,3],
-                    4:  [1,1,4],
-                    5:  [1,1,5],
-                    6:  [1,1,6],
-                    7:  [1,1,7],
-                    8:  [1,1,8],
-                    9:  [1,2,1],
-                    10: [1,2,2],
-                    11: [1,2,3],
-                    12: [1,2,4],
-                    13: [1,2,5],
-                    14: [1,2,6],
-                    15: [1,2,7],
-                    16: [1,2,8]}
+    tile_indeces = {1:  [1,1],
+                    2:  [1,2],
+                    3:  [1,3],
+                    4:  [1,4],
+                    5:  [1,5],
+                    6:  [1,6],
+                    7:  [1,7],
+                    8:  [1,8],
+                    9:  [2,1],
+                    10: [2,2],
+                    11: [2,3],
+                    12: [2,4],
+                    13: [2,5],
+                    14: [2,6],
+                    15: [2,7],
+                    16: [2,8]}
 
-    tile_positions = {1:  [-315.1745, 465.2,-155.2],
-                      2:  [-315.1745, 465.2, 155.2],
-                      3:  [-315.1745, 155.2,-155.2],
-                      4:  [-315.1745, 155.2, 155.2],
-                      5:  [-315.1745,-155.2,-155.2],
-                      6:  [-315.1745,-155.2, 155.2],
-                      7:  [-315.1745,-465.2,-155.2],
-                      8:  [-315.1745,-465.2, 155.2],
-                      9:  [ 315.1745, 465.2,-155.2],
-                      10: [ 315.1745, 465.2, 155.2],
-                      11: [ 315.1745, 155.2,-155.2],
-                      12: [ 315.1745, 155.2, 155.2],
-                      13: [ 315.1745,-155.2,-155.2],
-                      14: [ 315.1745,-155.2, 155.2],
-                      15: [ 315.1745,-465.2,-155.2],
-                      16: [ 315.1745,-465.2, 155.2]}
-
-    tpc_centers = {1: [0, -218.236, 0],
-                   2: [0, -218.236, 0]}
+    tile_positions = {1:  [-304.31, 465.57,-155.19],
+                      2:  [-304.31, 465.57, 155.19],
+                      3:  [-304.31, 155.19,-155.19],
+                      4:  [-304.31, 155.19, 155.19],
+                      5:  [-304.31,-155.19,-155.19],
+                      6:  [-304.31,-155.19, 155.19],
+                      7:  [-304.31,-465.57,-155.19],
+                      8:  [-304.31,-465.57, 155.19],
+                      9:  [ 304.31, 465.57,-155.19],
+                      10: [ 304.31, 465.57, 155.19],
+                      11: [ 304.31, 155.19,-155.19],
+                      12: [ 304.31, 155.19, 155.19],
+                      13: [ 304.31,-155.19,-155.19],
+                      14: [ 304.31,-155.19, 155.19],
+                      15: [ 304.31,-465.57,-155.19],
+                      16: [ 304.31,-465.57, 155.19]}
 
                              # z  y  x
     tile_orientations = {1:  [ 1,-1, 1],
@@ -154,27 +152,26 @@ def generate_layout(tile_layout_file, network_config_file, n_tiles, pixel_pitch=
     ys = []
     for chip in chipids:
         for channel, pixel in enumerate(board.chips[chip].channel_connections):
-            if pixel.x !=0 and pixel.y != 0:
+            if pixel.x != 0 and pixel.y != 0:
                 xs.append(pixel.x)
                 ys.append(pixel.y)
 
     for chip in chipids:
         for channel, pixel in enumerate(board.chips[chip].channel_connections):
-            if pixel.x !=0 and pixel.y != 0:
+            if pixel.x != 0 and pixel.y != 0:
                 key = chip*1000+channel
                 chip_channel[key] = [round((pixel.x - min(xs))/pixel_pitch),
                                      round((pixel.y - min(ys))/pixel_pitch)]
 
-    with open('multi_tile_layout-%s.yaml' % FORMAT_VERSION, 'w') as f:
+    with open(f'multi_tile_layout-{FORMAT_VERSION}.yaml', 'w', encoding='utf-8') as multi_tile_file:
         yaml.dump({'tile_layout_version': LAYOUT_VERSION,
                    'multitile_layout_version': FORMAT_VERSION,
                    'pixel_pitch': pixel_pitch,
                    'tile_positions': tile_positions,
                    'tile_orientations': tile_orientations,
-                   'tpc_centers': tpc_centers,
                    'tile_chip_to_io': tile_chip_io_channel_io_group,
                    'tile_indeces': tile_indeces,
-                   'chip_channel_to_position': chip_channel}, f)
+                   'chip_channel_to_position': chip_channel}, multi_tile_file)
 
 if __name__ == "__main__":
     fire.Fire(generate_layout)
